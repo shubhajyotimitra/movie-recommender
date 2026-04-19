@@ -47,30 +47,47 @@ def extract_preferences(user_input):
     
     return {"include": include, "exclude": exclude}
 
+@st.cache_data
 def fetch_poster(movie_id):
     api_key = "fc0a32c31ed208cb69e183ec5c8bc960"
     
     url = f"https://api.themoviedb.org/3/movie/{movie_id}?api_key={api_key}"
     
-    data = requests.get(url).json()
+    try:
+        response = requests.get(url, timeout=5)   # ✅ timeout added
+        data = response.json()
+        
+        poster_path = data.get('poster_path')
+        
+        if poster_path:
+            return "https://image.tmdb.org/t/p/w500/" + poster_path
+        else:
+            return None
     
-    poster_path = data.get('poster_path')
-    
-    if poster_path:
-        return "https://image.tmdb.org/t/p/w500/" + poster_path
-    else:
-        return None
+    except Exception as e:
+        return None   # ✅ prevent crash
 
 # Recommendation function
-def recommend_hybrid(user_input):
+def recommend_hybrid(user_input, top_n=10):
     
     prefs = extract_preferences(user_input)
+    
+    # ✅ Step 1: define include_text FIRST
     include_text = " ".join(prefs['include'])
     
+    # ✅ Step 2: then check if empty
+    if include_text.strip() == "":
+        include_text = user_input
+    
+    # ✅ Step 3: vectorize
     user_vector = tfidf.transform([include_text]).toarray()
     scores = cosine_similarity(user_vector, vectors)
     
-    movie_list = sorted(list(enumerate(scores[0])), reverse=True, key=lambda x: x[1])[1:20]
+    movie_list = sorted(
+        list(enumerate(scores[0])),
+        reverse=True,
+        key=lambda x: x[1]
+    )[1:top_n*5]
     
     final_movies = []
     
@@ -84,25 +101,27 @@ def recommend_hybrid(user_input):
         
         final_movies.append((title, movie_id))
         
-        if len(final_movies) == 5:
+        if len(final_movies) == top_n:
             break
     
     return final_movies
 
 # User input
+top_n = st.slider("Number of recommendations", 5, 20, 10)
 user_input = st.text_input("Describe what kind of movies you like:")
 
 if user_input:
-    recommendations = recommend_hybrid(user_input)
+    recommendations = recommend_hybrid(user_input, top_n)
     
     st.subheader("🎯 Recommended Movies:")
     
     cols = st.columns(5)
-    
+
     for idx, (title, movie_id) in enumerate(recommendations):
-        poster = fetch_poster(movie_id)
+        col = cols[idx % 5]   # ✅ correct cycling
         
-        with cols[idx]:
+        with col:
+            poster = fetch_poster(movie_id)
             if poster:
                 st.image(poster)
             st.write(title)
