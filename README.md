@@ -55,3 +55,108 @@ Final Recommendations + Posters
 
 ---
 
+## 🔍 Key Features
+
+✅ Content-based recommendation system
+✅ Hybrid AI (ML + logic-based understanding)
+✅ Handles user constraints (e.g., “not action”)
+✅ Interactive UI
+✅ Movie posters using TMDB API
+
+---
+
+## 🧪 Example Queries
+
+* “funny action movie in space”
+* “romantic movie but not action”
+* “crime thriller”
+
+---
+
+## 📸 Screenshots
+
+(Add screenshots of your app here)
+
+---
+
+## 🛠️ Installation & Setup
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/yourusername/movie-recommender.git
+cd movie-recommender
+```
+
+### 2. Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 3. Add TMDB API key
+
+In `app.py`, replace:
+
+```python
+api_key = "YOUR_TMDB_API_KEY"
+```
+
+### 4. Run the app
+
+```bash
+streamlit run app.py
+```
+
+---
+
+## 📂 Project Structure
+
+```
+movie-recommender/
+│
+├── app.py
+├── requirements.txt
+├── data/
+│   └── tmdb_5000_movies.csv
+```
+
+---
+
+## ⚠️ Limitations
+
+* Uses **rule-based preference extraction** (not full LLM)
+* No user history / personalization
+* Limited understanding of complex language
+
+---
+
+## 🚀 Future Improvements
+
+* Integrate real LLM (OpenAI / Hugging Face)
+* Add user feedback (like/dislike)
+* Implement collaborative filtering
+* Deploy on cloud for public access
+
+---
+
+## 💡 Key Learnings
+
+* Built an end-to-end ML system
+* Learned hybrid system design (ML + AI logic)
+* Integrated APIs into ML pipeline
+* Developed interactive UI
+
+---
+
+## 📌 Resume Highlight
+
+> Developed a hybrid movie recommendation chatbot using TF-IDF and cosine similarity, integrated with intelligent preference parsing and deployed via Streamlit with TMDB API-based UI enhancements.
+
+---
+
+## 🙌 Acknowledgements
+
+* TMDB Dataset
+* Scikit-learn
+* Streamlit
